@@ -1,10 +1,10 @@
-CREATE DATABASE Like_Me;
+CREATE DATABASE softjobs;
 
-/c Like_Me
+\c softjobs;
 
-CREATE TABLE posts(
-    id SERIAL, 
-    titulo VARCHAR(25), 
-    img VARCHAR(1000),
-    descripcion VARCHAR(255), 
-    likes INT);
+CREATE TABLE usuarios ( 
+id SERIAL, 
+email VARCHAR(50) NOT NULL, 
+password VARCHAR(60) NOT NULL, 
+rol VARCHAR(25), 
+lenguage VARCHAR(20) );

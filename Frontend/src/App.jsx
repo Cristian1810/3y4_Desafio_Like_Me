@@ -1,74 +1,30 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import Form from "./components/Form";
-import Post from "./components/Post";
+import './App.css'
+import Context from './contexts/Context'
+import useDeveloper from './hooks/useDeveloper'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
-const urlBaseServer = "http://localhost:3000";
+import Navigation from './components/Navigation'
+import Home from './views/Home'
+import Registro from './views/Register'
+import Login from './views/Login'
+import Perfil from './views/Profile'
 
-function App() {
-  const [titulo, setTitulo] = useState("");
-  const [imgSrc, setImgSRC] = useState("");
-  const [descripcion, setDescripcion] = useState("");
-  const [posts, setPosts] = useState([]);
-
-  const getPosts = async () => {
-    try {
-      const { data } = await axios.get(urlBaseServer + "/posts");
-      setPosts(Array.isArray(data) ? data : data.posts || []);
-    } catch (error) {
-      console.error("Error al obtener posts:", error);
-    }
-  };
-
-  const agregarPost = async () => {
-    const post = { titulo, url: imgSrc, descripcion };
-    await axios.post(urlBaseServer + "/posts", post);
-    getPosts();
-  };
-
-  // este método se utilizará en el siguiente desafío
-  const like = async (id,) => {
-    await axios.put(urlBaseServer + `/posts/like/${id}`);
-    getPosts();
-  };
-
-  // este método se utilizará en el siguiente desafío
-  const eliminarPost = async (id) => {
-    await axios.delete(urlBaseServer + `/posts/${id}`);
-    getPosts();
-  };
-
-  useEffect(() => {
-    getPosts();
-  }, []);
-
-  console.log(posts);
+const App = () => {
+  const globalState = useDeveloper()
 
   return (
-    <div className="App">
-      <h2 className="py-5 text-center">&#128248; Like Me &#128248;</h2>
-      <div className="row m-auto px-5">
-        <div className="col-12 col-sm-4">
-          <Form
-            setTitulo={setTitulo}
-            setImgSRC={setImgSRC}
-            setDescripcion={setDescripcion}
-            agregarPost={agregarPost}
-          />
-        </div>
-        <div className="col-12 col-sm-8 px-5 row posts align-items-start">
-          {posts.map((post, i) => (
-            <Post
-              key={i}
-              post={post}
-              like={like}
-              eliminarPost={eliminarPost}
-            />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+    <Context.Provider value={globalState}>
+      <BrowserRouter>
+        <Navigation />
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/registrarse' element={<Registro />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/perfil' element={<Perfil />} />
+        </Routes>
+      </BrowserRouter>
+    </Context.Provider>
+  )
 }
 
-export default App;
+export default App
